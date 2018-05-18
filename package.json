@@ -1,0 +1,91 @@
+{
+  "name": "rotation-demo",
+  "version": "1.0.0",
+  "description": "rotation demo, ES2017",
+  "author": "Scott Hill",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=8.5.0",
+    "npm": ">=5.3.0"
+  },
+  "scripts": {
+    "prestart": "npm run -s build",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.js --exec \"node -r babel-register\"",
+    "clean": "rimraf dist",
+    "build": "npm run clean && mkdir -p dist && babel src -s -D -d dist",
+    "test": "jest --verbose",
+    "lint": "standard"
+  },
+  "keywords": ["csv"],
+  "license": "MIT",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.3",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "csv-parser": "^1.12.1",
+    "rimraf": "^2.6.2",
+    "standard": "^11.0.1"
+  },
+  "devDependencies": {
+    "babel-jest": "^21.0.2",
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.2",
+    "eslint": "^4.19.1",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-jest": "^21.1.0",
+    "eslint-watch": "^3.1.2",
+    "jest": "^21.1.0",
+    "nodemon": "^1.12.1"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ],
+    "plugins": [
+      "transform-object-rest-spread"
+    ],
+    "sourceMaps": true,
+    "retainLines": true
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "plugins": [
+      "import",
+      "jest"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2017,
+      "sourceType": "module"
+    },
+    "env": {
+      "node": true,
+      "jest": true,
+      "es6": true
+    },
+    "extends": [
+      "eslint:recommended"
+    ],
+    "rules": {
+      "jest/no-focused-tests": 2,
+      "jest/no-identical-title": 2
+    }
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "standard": {
+    "parser": "babel-eslint"
+  }
+}
