@@ -17,7 +17,9 @@
     "test": "jest --verbose",
     "lint": "standard"
   },
-  "keywords": ["csv"],
+  "keywords": [
+    "csv"
+  ],
   "license": "MIT",
   "dependencies": {
     "babel-cli": "^6.26.0",
@@ -25,6 +27,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "csv-parser": "^1.12.1",
+    "moment": "^2.22.1",
     "rimraf": "^2.6.2",
     "standard": "^11.0.1"
   },

@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 import chai from 'chai'
-import { parseRotations, parseSpots, cpvByCreative } from '../src/data-parsers'
+import { parseRotations, parseSpots,
+  cpvByCreative, cpvByRotationDay } from '../src/data-parsers'
 
 let should = chai.should() // eslint-disable-line no-unused-vars
 
@@ -22,7 +23,7 @@ describe('parseSpots', () => {
       // console.log('data', data) // eslint-disable-line no-console
       data.length.should.eql(7)
       data[0].should.include.keys(
-        'date', 'time', 'creative', 'spend', 'views'
+        'dateTime', 'creative', 'spend', 'views'
       )
     })
   })
@@ -32,8 +33,14 @@ describe('cpvByCreative', () => {
   it('should return cost per view for a creative', () => {
     return parseSpots().then(data => {
       const cpv = cpvByCreative('TEST001H', data)
-      cpv.should.eql(2.81)
+      cpv.should.eql('2.81')
       // console.log('cpv', cpv) // eslint-disable-line no-console
     })
+  })
+})
+
+describe('cpvByRotationDay', () => {
+  it('should return cpvByRotationDay', () => {
+    cpvByRotationDay()
   })
 })
