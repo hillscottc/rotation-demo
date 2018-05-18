@@ -1,7 +1,12 @@
 import csv from 'csv-parser'
 import fs from 'fs'
 
-export const parseRotations = (file) =>
+export const cpvByCreative = (creative, spotsJson) => {
+  const spots = spotsJson.filter(x => x.creative === creative)
+  return spots.reduce((a, b) => ({spend: a.spend + b.spend}))
+}
+
+export const parseRotations = (file = 'data-files/rotations.csv') =>
   new Promise((resolve, reject) => {
     let jsonArr = []
     fs.createReadStream(file)
@@ -17,7 +22,7 @@ export const parseRotations = (file) =>
       })
   })
 
-export const parseSpots = (file) =>
+export const parseSpots = (file = 'data-files/spots.csv') =>
   new Promise((resolve, reject) => {
     let jsonArr = []
     fs.createReadStream(file)
