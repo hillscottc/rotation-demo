@@ -28,12 +28,12 @@ describe('parseSpots', () => {
   })
 })
 
-// describe('cpvByCreative', () => {
-//   it('should return cost per view for a creative', () => {
-//     return parseSpots().then(data => {
-//       const cpv = cpvByCreative('TEST001H', data)
-//       // cpv.should.eql('dd')
-//       console.log('cpv', cpv) // eslint-disable-line no-console
-//     })
-//   })
-// })
+describe('cpvByCreative', () => {
+  it('should return cost per view for a creative', () => {
+    return parseSpots().then(data => {
+      const cpv = cpvByCreative('TEST001H', data)
+      cpv.should.eql(2.81)
+      // console.log('cpv', cpv) // eslint-disable-line no-console
+    })
+  })
+})

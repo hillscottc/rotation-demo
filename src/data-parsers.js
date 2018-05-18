@@ -2,8 +2,15 @@ import csv from 'csv-parser'
 import fs from 'fs'
 
 export const cpvByCreative = (creative, spotsJson) => {
+  // spots for given creative
   const spots = spotsJson.filter(x => x.creative === creative)
-  return spots.reduce((a, b) => ({spend: a.spend + b.spend}))
+
+  // total spend, view for the spots
+  const totals = spots.reduce((a, b) => (
+    {spend: a.spend + b.spend, views: a.views + b.views}))
+
+  // avg spend/view
+  return parseFloat(totals.spend / totals.views).toFixed(2)
 }
 
 export const parseRotations = (file = 'data-files/rotations.csv') =>
@@ -32,8 +39,8 @@ export const parseSpots = (file = 'data-files/spots.csv') =>
           date: data.Date,
           time: data.Time,
           creative: data.Creative,
-          spend: data.Spend,
-          views: data.Views
+          spend: parseFloat(data.Spend),
+          views: parseInt(data.Views, 10)
         })
       })
       .on('end', () => {
