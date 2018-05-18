@@ -2,21 +2,26 @@ import csv from 'csv-parser'
 import fs from 'fs'
 import moment from 'moment'
 
-export const cpvByRotationDay = () => {
-  parseRotations().then(rotations => {
-    for (let rotation of rotations) {
-      // console.log('rotation', rotation) // eslint-disable-line no-console
-      parseSpots().then(spots => {
-        for (let spot of spots) {
-          // get this rotation's start/end for this spot's day
-          const rotStart = moment(`${spot.dateTime.format('MM/DD/YYYY')} ${rotation.start}`,
-            'MM/DD/YYYY h:mm a')
-          const rotEnd = moment(`${spot.dateTime.format('MM/DD/YYYY')} ${rotation.end}`,
-            'MM/DD/YYYY h:mm a')
+export const getSpotName = (spot, rotations) => {
+  for (let rotation of rotations) {
+    // get this rotation's start/end for this spot's day
+    const dateFormat = 'MM/DD/YYYY h:mm a'
+    const rotStart = moment(`${spot.dateTime.format('MM/DD/YYYY')} ${rotation.start}`, dateFormat)
+    const rotEnd = moment(`${spot.dateTime.format('MM/DD/YYYY')} ${rotation.end}`, dateFormat)
+    const isInRotation = spot.dateTime >= rotStart && spot.dateTime <= rotEnd
+    if (isInRotation) {
+      console.log(`${spot.dateTime.format('MM/DD/YYYY h:mm a')} is in ${rotStart.format('MM/DD/YYYY h:mm a')} - ${rotEnd.format('MM/DD/YYYY h:mm a')}`) // eslint-disable-line no-console
+      return {...spot, rotation: rotation.name}
+    }
+  }
+}
 
-          console.log(`${rotStart.format('MM/DD/YYYY h:mm a')} - ${rotEnd.format('MM/DD/YYYY h:mm a')}`) // eslint-disable-line no-console
-          console.log(`Is ${spot.dateTime.format('MM/DD/YYYY h:mm a')} in ? ${spot.dateTime >= rotStart && spot.dateTime <= rotEnd}`) // eslint-disable-line no-console
-        }
+export const cpvByRotationDay = () => {
+  parseSpots().then(spots => {
+    for (let spot of spots) {
+      parseRotations().then(rotations => {
+        getSpotName(spot, rotations)
+        console.log('mod spot:', getSpotName(spot, rotations)) // eslint-disable-line no-console
       })
     }
   })
