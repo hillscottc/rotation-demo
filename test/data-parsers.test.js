@@ -54,6 +54,9 @@ describe('cpvByRotationDay', () => {
   it('should return cpvByRotationDay', async () => {
     const rotations = await parseRotations()
     const spots = await parseSpots(rotations)
-    cpvByRotationDay(spots)
+    const resultsMap = cpvByRotationDay(spots)
+    // console.log('resultsMap:', resultsMap) // eslint-disable-line no-console
+    // console.log(resultsMap.values()) // eslint-disable-line no-console
+    resultsMap.forEach(v => console.log(v)) // eslint-disable-line no-console
   })
 })

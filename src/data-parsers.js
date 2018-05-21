@@ -16,19 +16,42 @@ export const getRotationName = (dateTime, rotations) => {
 }
 
 export const cpvByRotationDay = (spots) => {
-  // const spotMap = new Map()
+  const resultsMap = new Map()
   for (let spot of spots) {
     // get all spots for that day
     const matched = spots.filter(x =>
+      spot !== x &&
       spot.dateTime.isSame(x.dateTime, 'day') &&
-      spot.rotation === x.rotation &&
-      spot !== x
+      spot.rotation === x.rotation
     )
-    console.log(`${JSON.stringify(spot)} matched:`, matched) // eslint-disable-line no-console
+    // console.log(`${JSON.stringify(spot)} matched:`, matched) // eslint-disable-line no-console
 
-    // getSpotName(spot, rotations)
-    // console.log('mod spot:', getSpotName(spot, rotations)) // eslint-disable-line no-console
+    let totals = {}
+    if (matched.length < 1) {
+      totals = {spend: spot.spend, views: spot.views}
+    } else {
+      totals = matched.reduce((a, b) => (
+        {spend: a.spend + b.spend, views: a.views + b.views}))
+    }
+    totals = {
+      spend: totals.spend,
+      views: totals.views,
+      cpv: parseFloat(totals.spend / totals.views).toFixed(2)
+    }
+
+    // console.log('totals:', totals) // eslint-disable-line no-console
+
+    const result = {
+      date: spot.dateTime.format('MM/DD/YYYY'),
+      rotation: spot.rotation,
+      totals: totals
+    }
+    resultsMap.set(
+      `${spot.dateTime.format('MM/DD/YYYY')}, ${spot.rotation}`,
+      result
+    )
   }
+  return resultsMap
 }
 
 export const cpvByCreative = (creative, spotsJson) => {
