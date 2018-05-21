@@ -2,29 +2,33 @@ import csv from 'csv-parser'
 import fs from 'fs'
 import moment from 'moment'
 
-export const getSpotName = (spot, rotations) => {
+export const dateFormat = 'MM/DD/YYYY h:mm a'
+
+export const getRotationName = (dateTime, rotations) => {
   for (let rotation of rotations) {
-    // get this rotation's start/end for this spot's day
-    const dateFormat = 'MM/DD/YYYY h:mm a'
-    const rotStart = moment(`${spot.dateTime.format('MM/DD/YYYY')} ${rotation.start}`, dateFormat)
-    const rotEnd = moment(`${spot.dateTime.format('MM/DD/YYYY')} ${rotation.end}`, dateFormat)
-    const isInRotation = spot.dateTime >= rotStart && spot.dateTime <= rotEnd
-    if (isInRotation) {
-      console.log(`${spot.dateTime.format('MM/DD/YYYY h:mm a')} is in ${rotStart.format('MM/DD/YYYY h:mm a')} - ${rotEnd.format('MM/DD/YYYY h:mm a')}`) // eslint-disable-line no-console
-      return {...spot, rotation: rotation.name}
+    // get this rotation's start/end moment for this spot's day
+    const rotStart = moment(`${dateTime.format('MM/DD/YYYY')} ${rotation.start}`, dateFormat)
+    const rotEnd = moment(`${dateTime.format('MM/DD/YYYY')} ${rotation.end}`, dateFormat)
+    if (dateTime >= rotStart && dateTime <= rotEnd) {
+      return rotation.name
     }
   }
 }
 
-export const cpvByRotationDay = () => {
-  parseSpots().then(spots => {
-    for (let spot of spots) {
-      parseRotations().then(rotations => {
-        getSpotName(spot, rotations)
-        console.log('mod spot:', getSpotName(spot, rotations)) // eslint-disable-line no-console
-      })
-    }
-  })
+export const cpvByRotationDay = (spots) => {
+  // const spotMap = new Map()
+  for (let spot of spots) {
+    // get all spots for that day
+    const matched = spots.filter(x =>
+      spot.dateTime.isSame(x.dateTime, 'day') &&
+      spot.rotation === x.rotation &&
+      spot !== x
+    )
+    console.log(`${JSON.stringify(spot)} matched:`, matched) // eslint-disable-line no-console
+
+    // getSpotName(spot, rotations)
+    // console.log('mod spot:', getSpotName(spot, rotations)) // eslint-disable-line no-console
+  }
 }
 
 export const cpvByCreative = (creative, spotsJson) => {
@@ -57,15 +61,16 @@ export const parseRotations = (file = 'data-files/rotations.csv') =>
   })
 
 /* Parse csv file for 'spots' data, returns arry or json. */
-export const parseSpots = (file = 'data-files/spots.csv') =>
+export const parseSpots = (rotations, file = 'data-files/spots.csv') =>
   new Promise((resolve, reject) => {
     let jsonArr = []
     fs.createReadStream(file)
       .pipe(csv())
       .on('data', (data) => {
+        const dateTime = moment(`${data.Date} ${data.Time}`, dateFormat)
         jsonArr.push({
-          dateTime: moment(`${data.Date} ${data.Time}`,
-            'MM/DD/YYYY h:mm a'),
+          dateTime: dateTime,
+          rotation: getRotationName(dateTime, rotations),
           creative: data.Creative,
           spend: parseFloat(data.Spend),
           views: parseInt(data.Views, 10)
