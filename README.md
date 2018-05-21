@@ -12,7 +12,7 @@ Write a program that:
 
 This is ES2017 Node project. Building the project uses Babel to transpile /src to /dist. The [Javascript Standard Style](https://standardjs.com/) is used.
 
-A module of functions ([src/data-parsers.js](src/data-parsers.js)) is used to handle the task.
+A custom module of functions ([src/data-parsers.js](src/data-parsers.js)) is used to handle the task. The ouput is very basic, but the functions are highly re-useable.
 
 ## Installation
 
