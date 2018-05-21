@@ -1,16 +1,16 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef, no-console */
 import chai from 'chai'
 import moment from 'moment'
 
 import { parseRotations, parseSpots, getRotationName,
-  cpvByCreative, cpvByRotationDay, dateFormat } from '../src/data-parsers'
+  cpvByCreative, cpvByRotationDay, getCreatives,
+  dateFormat } from '../src/data-parsers'
 
 let should = chai.should() // eslint-disable-line no-unused-vars
 
 describe('parseRotations', () => {
   it('should return array of rotation json', () => {
     return parseRotations().then(data => {
-      // console.log('data', data) // eslint-disable-line no-console
       data.length.should.eql(3)
       data[0].should.include.keys(
         'start', 'end', 'name'
@@ -23,11 +23,20 @@ describe('parseSpots', () => {
   it('should return array of spot json', async () => {
     const rotations = await parseRotations()
     const spots = await parseSpots(rotations)
-    // console.log('spots', spots) // eslint-disable-line no-console
+    // console.log('spots', spots)
     spots.length.should.eql(7)
     spots[0].should.include.keys(
       'dateTime', 'rotation', 'creative', 'spend', 'views'
     )
+  })
+})
+
+describe('getCreatives', () => {
+  it('should return Set of creative names', async () => {
+    const rotations = await parseRotations()
+    const spots = await parseSpots(rotations)
+    const creatives = getCreatives(spots)
+    creatives.size.should.eql(2)
   })
 })
 
@@ -51,12 +60,11 @@ describe('getRotationName', () => {
 })
 
 describe('cpvByRotationDay', () => {
-  it('should return cpvByRotationDay', async () => {
+  it('should return Map of cpvByRotationDay', async () => {
     const rotations = await parseRotations()
     const spots = await parseSpots(rotations)
     const resultsMap = cpvByRotationDay(spots)
-    // console.log('resultsMap:', resultsMap) // eslint-disable-line no-console
-    // console.log(resultsMap.values()) // eslint-disable-line no-console
-    resultsMap.forEach(v => console.log(v)) // eslint-disable-line no-console
+    // resultsMap.forEach(v => console.log(v))
+    resultsMap.size.should.eql(4)
   })
 })

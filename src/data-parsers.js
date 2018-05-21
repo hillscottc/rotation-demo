@@ -4,6 +4,11 @@ import moment from 'moment'
 
 export const dateFormat = 'MM/DD/YYYY h:mm a'
 
+/**
+ * Get the rotation name, like 'Morning', for given datetime
+ * @param {*} dateTime
+ * @param {*} rotations
+ */
 export const getRotationName = (dateTime, rotations) => {
   for (let rotation of rotations) {
     // get this rotation's start/end moment for this spot's day
@@ -15,6 +20,20 @@ export const getRotationName = (dateTime, rotations) => {
   }
 }
 
+/**
+ * Get set of unique Creatives in given spots
+ * @param {*} spots
+ */
+export const getCreatives = (spots) => {
+  const resultSet = new Set()
+  spots.forEach(x => resultSet.add(x.creative))
+  return resultSet
+}
+
+/**
+ * Get CPV per Rotation and Day in given spots
+ * @param {*} spots
+ */
 export const cpvByRotationDay = (spots) => {
   const resultsMap = new Map()
   for (let spot of spots) {
@@ -24,7 +43,6 @@ export const cpvByRotationDay = (spots) => {
       spot.dateTime.isSame(x.dateTime, 'day') &&
       spot.rotation === x.rotation
     )
-    // console.log(`${JSON.stringify(spot)} matched:`, matched) // eslint-disable-line no-console
 
     let totals = {}
     if (matched.length < 1) {
@@ -39,13 +57,13 @@ export const cpvByRotationDay = (spots) => {
       cpv: parseFloat(totals.spend / totals.views).toFixed(2)
     }
 
-    // console.log('totals:', totals) // eslint-disable-line no-console
-
     const result = {
       date: spot.dateTime.format('MM/DD/YYYY'),
       rotation: spot.rotation,
       totals: totals
     }
+
+    // Map a k:v like "01/01/2000, Morning":{result}
     resultsMap.set(
       `${spot.dateTime.format('MM/DD/YYYY')}, ${spot.rotation}`,
       result
@@ -54,6 +72,11 @@ export const cpvByRotationDay = (spots) => {
   return resultsMap
 }
 
+/**
+ * CPV per Creative for given spots
+ * @param {*} creative
+ * @param {*} spotsJson
+ */
 export const cpvByCreative = (creative, spotsJson) => {
   // spots for given creative
   const spots = spotsJson.filter(x => x.creative === creative)
@@ -66,7 +89,10 @@ export const cpvByCreative = (creative, spotsJson) => {
   return parseFloat(totals.spend / totals.views).toFixed(2)
 }
 
-/* Parse csv file for 'rotations' data, returns arry or json. */
+/**
+ * Parse csv file for 'rotations' data, returns arry of json.
+ * @param {*} file
+ */
 export const parseRotations = (file = 'data-files/rotations.csv') =>
   new Promise((resolve, reject) => {
     let jsonArr = []
@@ -83,7 +109,11 @@ export const parseRotations = (file = 'data-files/rotations.csv') =>
       })
   })
 
-/* Parse csv file for 'spots' data, returns arry or json. */
+/**
+ * Parse csv file for 'spots' data, returns array or json.
+ * @param {*} rotations
+ * @param {*} file
+ */
 export const parseSpots = (rotations, file = 'data-files/spots.csv') =>
   new Promise((resolve, reject) => {
     let jsonArr = []

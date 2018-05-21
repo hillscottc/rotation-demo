@@ -1,11 +1,20 @@
-import {parseRotations, parseSpots} from './data-parsers'
+/* eslint-disable no-console */
+import {parseRotations, parseSpots, getCreatives,
+  cpvByCreative, cpvByRotationDay} from './data-parsers'
 
 const report = async () => {
-  const rotations = await parseRotations('data-files/rotations.csv')
-  console.log('rotations:', rotations) // eslint-disable-line no-console
+  const rotations = await parseRotations()
+  const spots = await parseSpots(rotations)
+  const creatives = getCreatives(spots)
 
-  const spots = await parseSpots('data-files/spots.csv')
-  console.log('spots:', spots) // eslint-disable-line no-console
+  console.log('CPV PER CREATIVE')
+  for (let creative of creatives) {
+    console.log(` ${creative} :`, cpvByCreative(creative, spots))
+  }
+
+  const resultsMap = cpvByRotationDay(spots)
+  console.log('\nCPV PER ROTATION DAY')
+  resultsMap.forEach(v => console.log(v))
 }
 
 report()
