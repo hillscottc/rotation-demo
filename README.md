@@ -1,33 +1,37 @@
 # Ad Rotation Demo
 
-## Description
+Task Description
 
-Write a program in the language of your choosing that:
-
+Write a program that:
 * Consumes both `rotations.csv` and `spots.csv`
-* Generates output that shows cost per view by two dimensions:
-  * CPV by creative
-  * CPV by rotation by day
+* Generates output that shows cost per view by 'CPV by creative' and 'CPV by rotation by day'
+  * "Creative" = Business lingo for a TV ad
+  * "Rotation" = The timerange on a TV network that an ad airs in
 
+## Implementation
+
+This is ES2017 Node project. Building the project uses Babel to transpile /src to /dist. The [Javascript Standard Style](https://standardjs.com/) is used.
+
+A module of functions ([src/data-parsers.js](src/data-parsers.js)) is used to handle the task.
+
+## Installation
+
+Clone this repo, then run `npm install`.
 ```sh
-# rotations.csv
-"Start","End","Name"
-"6:00 AM","12:00 PM","Morning"
-"12:00 PM","4:00 PM","Afternoon"
-"3:00 PM","8:00 PM","Prime"
-
-# spots.csv
-"Date","Time","Creative","Spend","Views"
-"01/02/2016","8:30 AM","TEST001H",120.50,100
-"01/02/2016","11:30 AM","TEST001H",240.50,110
-"01/02/2016","3:30 PM","TEST002H",500,80
-"01/02/2016","3:34 PM","TEST002H",400,90
-"01/02/2016","3:40 PM","TEST001H",400,110
-"02/02/2016","7:30 AM","TEST001H",700,200
-"02/02/2016","7:30 PM","TEST002H",700,300
+$ git clone https://github.com/hillscottc/rotation-demo
+$ cd rotation-demo
+$ npm install
 ```
 
-### Details
+## Usage
 
-* "Creative" - Business lingo for a TV ad
-* "Rotation" - The timerange on a TV network that an ad airs in
+You can run the code (`npm start`) to see very basic output, solving the task.
+```
+$ npm start
+```
+
+## Testing
+[Jest](https://facebook.github.io/jest/) is used for testing.
+```
+$ npm test
+```
